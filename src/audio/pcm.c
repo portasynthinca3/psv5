@@ -1,6 +1,4 @@
 #include "pcm.h"
-#include <stdlib.h>
-#include <stdint.h>
 #include <driver/i2s.h>
 #include <freertos/FreeRTOS.h>
 
@@ -9,7 +7,7 @@ size_t stretched_buf_size = 0;
 
 void pcm_init(void) {
     i2s_config_t i2s_config = {
-        .mode = I2S_MODE_MASTER | I2S_MODE_RX | I2S_MODE_TX | I2S_MODE_DAC_BUILT_IN | I2S_MODE_ADC_BUILT_IN,
+        .mode = I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_DAC_BUILT_IN,
         .sample_rate =  PCM_SAMPLE_RATE,
         .bits_per_sample = 16,
         .communication_format = I2S_COMM_FORMAT_STAND_MSB,
@@ -17,24 +15,10 @@ void pcm_init(void) {
         .intr_alloc_flags = 0,
         .dma_buf_count = 2,
         .dma_buf_len = 1024,
-        .use_apll = 1,
+        .use_apll = 0,
     };
     i2s_driver_install(PCM_I2S_NUM, &i2s_config, 0, NULL);
     i2s_set_dac_mode(I2S_DAC_CHANNEL_BOTH_EN);
-
-    pcm_sample_t hi[512];
-    pcm_sample_t lo[512];
-    for(int i = 0; i < 512; i++) {
-        hi[i].left = 255;
-        hi[i].right = 255;
-        lo[i].left = 0;
-        lo[i].right = 0;
-    }
-
-    while(true) {
-        pcm_write(hi, 512);
-        pcm_write(lo, 512);
-    }
 }
 
 size_t pcm_write(pcm_sample_t* src, size_t len) {

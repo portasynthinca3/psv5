@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 #define PCM_I2S_NUM     0
-#define PCM_SAMPLE_RATE 44100
+#define PCM_SAMPLE_RATE 48000
 
 typedef struct __attribute__((packed)) {
     uint8_t left;
