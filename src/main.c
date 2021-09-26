@@ -1,5 +1,6 @@
 #include <esp_log.h>
+#include "pcm.h"
 
 void app_main() {
-    ESP_LOGI("hi", "hi");
+    pcm_init();
 }
