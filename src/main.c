@@ -13,10 +13,11 @@ void app_main() {
 
     operator_t op;
     operator_set_fq(&op, 1000);
+    operator_set_form(&op, operator_waveform_sine);
     int64_t len = 100 * PCM_SAMPLE_RATE;
     int64_t elapsed = esp_timer_get_time();
     for(int i = 0; i < len; i++)
-        operator_process(&op);
+        op.process(&op);
     elapsed = esp_timer_get_time() - elapsed;
 
     ESP_LOGI("main", "calculated %lli seconds of audio in %lli us", len / PCM_SAMPLE_RATE, elapsed);
