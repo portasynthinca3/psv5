@@ -2,8 +2,8 @@
 #include <stdint.h>
 #include <math.h>
 
-// samples per quarter of a sine/tri wave
-#define OP_TAB_SIZE 1024
+#define OP_TAB_SIZE 1024 // samples per sine/tri wave
+#define OP_FP_BITS 8     // phase decimal part bits
 
 typedef enum {
     operator_waveform_sine,
@@ -14,12 +14,11 @@ typedef enum {
 
 typedef struct {
     operator_waveform_t waveform;
-    uint32_t phase;
+    uint32_t phase, phase_increment;
     float freq;
-    uint32_t max_phase;
     uint16_t vol;
 } operator_t;
 
-void     operator_init   (void);
-uint16_t operator_process(operator_t* op);
-void     operator_set_fq (operator_t* op, float fq);
+void    operator_init   (void);
+int16_t operator_process(operator_t* op);
+void    operator_set_fq (operator_t* op, uint16_t fq);
