@@ -24,11 +24,8 @@ void operator_set_fq(operator_t* op, uint16_t fq) {
         return;
 
     op->freq = fq;
-    float samples_per_cycle = (float)PCM_SAMPLE_RATE / fq;
-    op->phase_increment = (OP_TAB_SIZE / samples_per_cycle) * (float)(1 << 8);
+    op->phase_increment = ((uint32_t)fq * OP_TAB_SIZE / PCM_SAMPLE_RATE) * (float)(1 << 8);
     op->phase_increment <<= OP_FP_BITS - 7;
-
-    // ESP_LOGI(TAG, "%f spc, dp=%i", samples_per_cycle, op->phase_increment);
 }
 
 // UNREADABLE CODE AHEAD
