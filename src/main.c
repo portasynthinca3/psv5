@@ -12,7 +12,8 @@ void app_main() {
     pcm_init();
 
     operator_t op;
-    operator_set_fq(&op, 1000);
+    op.vol = 32768;
+    operator_set_fq(&op, 200);
     operator_set_form(&op, operator_waveform_sine);
     int64_t len = 100 * PCM_SAMPLE_RATE;
     int64_t elapsed = esp_timer_get_time();

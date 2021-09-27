@@ -2,8 +2,10 @@
 #include <stdint.h>
 #include <math.h>
 
-#define OP_TAB_SIZE 1024 // samples per sine/tri wave
-#define OP_FP_BITS 8     // phase decimal part bits
+#define OP_TAB_SIZE 1024 // samples per sine/tri wave (DO NOT CHANGE)
+#define OP_FP_BITS 22    // phase decimal part bits (DO NOT CHANGE)
+
+#define INT16_TO_UINT8(val) (uint8_t)(((int32_t)(val) + 32768) >> 8)
 
 typedef enum {
     operator_waveform_sine = 0,

@@ -25,13 +25,16 @@ void operator_set_fq(operator_t* op, uint16_t fq) {
 
     op->freq = fq;
     float samples_per_cycle = (float)PCM_SAMPLE_RATE / fq;
-    op->phase_increment = samples_per_cycle * (float)(1 << OP_FP_BITS);
+    op->phase_increment = (OP_TAB_SIZE / samples_per_cycle) * (float)(1 << 8);
+    op->phase_increment <<= OP_FP_BITS - 7;
+
+    // ESP_LOGI(TAG, "%f spc, dp=%i", samples_per_cycle, op->phase_increment);
 }
 
 // UNREADABLE CODE AHEAD
 //
 // why?
-// to avoid brances in speed-sensitive code to squeeze out 94 simultaneous sine
+// to avoid branches in speed-sensitive code to squeeze out 94 simultaneous sine
 // waves even though the code that uses branches works with 79 fine and is way
 // more readable
 void operator_set_form(operator_t* op, operator_waveform_t form) {
@@ -43,7 +46,7 @@ void operator_set_form(operator_t* op, operator_waveform_t form) {
     op->process = table[form];
 }
 
-#define PROCESSOR_PROLOGUE op->phase %= OP_TAB_SIZE << OP_FP_BITS; int32_t sample = 0;
+#define PROCESSOR_PROLOGUE int32_t sample = 0;
 #define PROCESSOR_EPILOGUE op->phase += op->phase_increment; return sample * op->vol / 32768;
 
 int16_t _operator_process_sine(operator_t* op) {
